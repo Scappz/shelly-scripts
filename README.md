@@ -2,7 +2,7 @@
 Scripts for gen4 shelly smart relays
 
 ## Scripts
-1. [Close blinds before it rains](#2pm-close-blinds-when-rains)  
+1. [Close blinds before it rains](#Close blinds before it rains)  
 
 ## Close blinds before it rains
 Name: `2pm-blinds-close-when-rains.js`  
