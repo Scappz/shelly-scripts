@@ -8,10 +8,12 @@ var OPEN_METEO_URL =
   "&hourly=precipitation_probability,precipitation" +
   "&timezone=Europe%2FBerlin" +
   "&forecast_days=1";
-
-// Límite para avisar de lluvia
+  
+// Config
 var PRECIP_THRESHOLD_MM = 0.2;
 var PROB_THRESHOLD_PCT = 50;
+var DONT_CLOSE_IF_LOWER = 40;
+var CLOSE_POSITION = 20;
 
 // Formatea número a 2 dígitos (ej: 3 -> "03")
 function twoDigits(n) {
@@ -106,14 +108,11 @@ function checkRainNextHour() {
       // Condición de "Va a llover"
       if (prec > PRECIP_THRESHOLD_MM && prob > PROB_THRESHOLD_PCT) {
         print("Va a llover");
-        Shelly.addStatusHandler(function(e) {
-          if (e.component === "cover:0") {
-            if (e.delta.current_pos > 40) {
-              print("Cerrando persiana");
-              Shelly.call("Cover.GoToPosition", {'id': 0, 'pos': 20});
-            }
-          }
-        });
+        
+        const status = Shelly.getComponentStatus("cover:0");
+        if (status.current_pos > DONT_CLOSE_IF_LOWER) {
+          Shelly.call("Cover.GoToPosition", {'id': 0, 'pos': CLOSE_POSITION});
+        }
       }
     }
   );
